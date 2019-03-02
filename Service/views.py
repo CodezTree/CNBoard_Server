@@ -11,7 +11,7 @@ import os
 import json
 
 from .forms import NoticeForm, FileForm, LoginForm, ExamForm
-from .models import NoticeData, FileData, ExamData
+from .models import NoticeData, FileData, ExamData, AlertNoticeData
 
 # Create your views here.
 
@@ -228,6 +228,24 @@ def show_filtered_notice(request):
 
     return HttpResponse('')
 
+
+def show_alert_notice(request): # 긴급공지 리스트
+
+    alert_notice_list = list(AlertNoticeData.objects.all().values())
+
+    response = json.dumps(alert_notice_list, cls=DjangoJSONEncoder, ensure_ascii=False)
+
+    return HttpResponse(response)
+
+
+def delete_alert_notice(request): # 누구나 시간대 확인해서 다르면 삭제 가능
+    if request.method == 'POST':
+        notice_id = request.POST.get('noticeID')
+
+        notice = AlertNoticeData.objects.get(id=notice_id)
+        notice.remove()
+
+    return HttpResponse('')
 
 # ---------------- NOTICE END ----------------
 

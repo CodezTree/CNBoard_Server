@@ -81,3 +81,20 @@ class NoticeData(models.Model):
     def delete(self, *args, **kwargs):
         self.notice_image.delete()
         super().delete(*args, **kwargs) # Call Real Save
+
+
+class AlertNoticeData(models.Model):
+    notice_title = models.CharField(null=False, max_length=20)
+    # 공지 제목
+
+    notice_content = models.CharField(blank=True, max_length=200)
+    # 공지 내용
+
+    notice_image = models.ImageField(upload_to='alertNotice/image/', blank=True, null=True)
+    # 공지 이미지
+
+    notice_file = models.FileField(upload_to='alertNotice/files/', blank=True, null=True)
+    # 공지 첨부파일
+
+    notice_due_date = models.DateTimeField(null=False)
+    # 공지 게시 기한

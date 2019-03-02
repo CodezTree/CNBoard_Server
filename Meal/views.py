@@ -48,7 +48,6 @@ def delete_comment(request):
             return HttpResponse('ErrorCode:1112')
 
 
-
 def show_meal(request):
     now = dt.datetime.now()
     startDay = now.date() + dt.timedelta(days=-now.weekday()) # select monday
@@ -59,6 +58,7 @@ def show_meal(request):
 
     return HttpResponse(response)
 
+
 def show_meal_comment(request, id):
     target_meal = Meal.objects.get(id=id)
 
@@ -66,6 +66,7 @@ def show_meal_comment(request, id):
     response = json.dumps(comment_list, cls=DjangoJSONEncoder, ensure_ascii=False)
 
     return HttpResponse(response)
+
 
 def like_comment(request):
     if request.method == 'POST':

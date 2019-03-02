@@ -10,6 +10,8 @@ urlpatterns = [
     path('class/notices/upload', views.UploadNoticeView.as_view(), name='class_upload_notice'),
     path('showNotice/', views.show_notice_android, name='show_notice'),
     path('showFilteredNotice/', views.show_filtered_notice, name='show_filtered_notice'),
+    path('showAlertNotice', views.show_alert_notice, name='show_alert_notice'),
+    path('deleteAlertNotice', views.delete_alert_notice, name='delete_alert_notice'),
 
     path('files/', views.file_list, name='file_list'),
     path('files/upload', views.upload_file, name='upload_file'),

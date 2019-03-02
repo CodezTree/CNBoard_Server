@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% block content_header %}
+        <h2>Exams</h2>
+
+        <p>
+            <a href="{% url 'add_exam_data' %}" class="btn btn-primary">Upload Exam Data</a>
+
+            {% if exam_available == 0 %}
+                <a href="{% url 'exam_service_state_change' %}" class="btn btn-primary">Service Activate</a>
+            {% else %}
+                <a href="{% url 'exam_service_state_change' %}" class="btn btn-danger">Service Deactivate</a>
+            {% endif %}
+        </p>
+    {% endblock %}
+
+    <style>
+        #cell { vertical-align: middle; }
+    </style>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Exam Code</th>
+                <th>Category</th>
+                <th>Grade</th>
+                <th>Exam Name</th>
+                <th>Exam Range</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for exam in exams %}
+                <tr>
+                    <td style="vertical-align:middle;">{{ exam.exam_code }}</td>
+                    <td style="vertical-align:middle;">{{ exam.category }}</td>
+                    <td style="vertical-align:middle;">{{ exam.target_grade }}</td>
+                    <td style="vertical-align:middle;">{{ exam.exam_name }}</td>
+                    <td style="vertical-align:middle;">{{ exam.exam_range }}</td>
+                    <td style="vertical-align:middle;">
+                        {% with list_id=exam.pk|stringformat:"s" %}
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{ 'DeleteModel'|add:list_id }}">Delete</button>
+
+                            <div id="{{ 'DeleteModel'|add:list_id }}" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header"># Warning #</div>
+                                        <div class="modal-body">Are you sure to delete this exam data?</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                                            <form method="post" action="{% url 'delete_exam_data' exam.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

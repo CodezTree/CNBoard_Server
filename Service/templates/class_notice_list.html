@@ -1,0 +1,9 @@
+{% extends 'notice_list.html' %}
+
+{% block content_header %}
+    <h2>Notices (Class-Based View)</h2>
+
+    <p>
+        <a href="{% url 'class_upload_notice' %}" class="btn btn-primary">Upload Notice</a>
+    </p>
+{% endblock %}

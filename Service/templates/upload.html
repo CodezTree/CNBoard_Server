@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Upload</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="notice_doc">
+        <button type="submit">Upload</button>
+    </form>
+    {% if saved_url %}
+        <p>Uploaded Notice : <a href="{{ saved_url }}">{{ saved_url }}</a> </p>
+    {% endif %}
+{% endblock %}

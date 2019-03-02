@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% load mathfilters %}
+
+{% block content %}
+
+    <h2>Files</h2>
+
+    <p>
+        <a href="{% url 'upload_file' %}" class="btn btn-primary">Upload Files</a>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>File</th>
+                <th>Size</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+                <tr>
+                    <td style="vertical-align:middle;">{{ file.file_title }}</td>
+                    <td style="vertical-align:middle;">{{ file.file_description|stringformat:".80s" }}</td>
+                    <td style="vertical-align:middle;">
+                        <a href="{{ file.file_document.url }}" class="btn btn-primary btn-sm" target="_blank">
+                            Download
+                        </a>
+                    </td>
+                    <td>{{ file.file_document.size|intdiv:1048576 }}MB</td>
+                    <td style="vertical-align:middle;">
+                        {% with list_id=file.pk|stringformat:"s" %}
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{ 'DeleteModel'|add:list_id }}">Delete</button>
+
+                            <div id="{{ 'DeleteModel'|add:list_id }}" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header"># Warning #</div>
+                                        <div class="modal-body">Are you sure to delete this file?</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                                            <form method="post" action="{% url 'delete_file' file.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

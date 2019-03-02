@@ -29,7 +29,9 @@
                 <tr>
                     <td style="vertical-align:middle;">{{ notice.notice_title }}</td>
                     <td style="vertical-align:middle;">
-                        {% if notice.target_grade == 1 %}
+                        {% if notice.target_grade == 0 %}
+                        NULL
+                        {% elif notice.target_grade == 1 %}
                         1학년
                         {% elif notice.target_grade == 2 %}
                         2학년
@@ -41,13 +43,15 @@
                     </td>
                     <td style="vertical-align:middle;">
                         {% if notice.notice_kind == 0 %}
-                        기타
+                        NULL
                         {% elif notice.notice_kind == 1 %}
                         일정
                         {% elif notice.notice_kind == 2 %}
                         대회
-                        {% else %}
+                        {% elif notice.target_grade == 3 %}
                         행사
+                        {% else %}
+                        기타
                         {% endif %}
                     </td>
                     <td style="vertical-align:middle;">

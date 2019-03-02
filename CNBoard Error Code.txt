@@ -3,3 +3,5 @@
 1111 : Cannot Find Object In Database
 
 1112 : Meal Comment Delete Denied. Check User and Author are same.
+
+1113 : No Parameter Expected

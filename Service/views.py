@@ -198,11 +198,35 @@ def delete_notice(request, pk):
         notice.delete()
     return redirect('notice_list')
 
-@csrf_exempt
+
 def show_filtered_notice(request):
     if request.method == 'POST':
-        
+        notice_kind = request.POST.get('notice_kind')
+        target_grade = request.POST.get('target_grade')
 
+        if not notice_kind or not target_grade:
+            return HttpResponse('ErrorCode:1113')
+
+        notice_kind = int(notice_kind)
+        target_grade = int(target_grade)
+
+        if notice_kind == 0:
+            if target_grade == 0:
+                return redirect('show_notice') # 전체공지 보여주기
+            else:
+                notice_return = list(NoticeData.objects.filter(target_grade=target_grade).values())
+        else:
+            if not target_grade:
+                notice_return = list(NoticeData.objects.filter(notice_kind=notice_kind).values())
+            else:
+                notice_return = list(
+                    NoticeData.objects.filter(notice_kind=notice_kind, target_grade=target_grade).values())
+
+        response = json.dumps(notice_return, cls=DjangoJSONEncoder, ensure_ascii=False)
+
+        return HttpResponse(response)
+
+    return HttpResponse('')
 
 
 # ---------------- NOTICE END ----------------

@@ -9,6 +9,7 @@ urlpatterns = [
     path('class/notices/', views.NoticeListView.as_view(), name='class_notice_list'),
     path('class/notices/upload', views.UploadNoticeView.as_view(), name='class_upload_notice'),
     path('showNotice/', views.show_notice_android, name='show_notice'),
+    path('showFilteredNotice/', views.show_filtered_notice, name='show_filtered_notice'),
 
     path('files/', views.file_list, name='file_list'),
     path('files/upload', views.upload_file, name='upload_file'),

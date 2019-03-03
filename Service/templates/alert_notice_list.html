@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% load mathfilters %}
+
+{% block content %}
+
+    {% block content_header %}
+        <h2>Notices</h2>
+
+        <p>
+            <a href="{% url 'upload_alert_notice' %}" class="btn btn-primary">Upload Alert Notice</a>
+        </p>
+    {% endblock %}
+
+    <style>
+        #cell { vertical-align: middle; }
+    </style>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Grade</th>
+                <th>Image</th>
+                <th>File</th>
+                <th>Due Date</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notice in notices %}
+                <tr>
+                    <td style="vertical-align:middle;">{{ notice.notice_title }}</td>
+                    <td style="vertical-align:middle;">{{ notice.notice_content }}</td>
+                    <td style="vertical-align:middle;">
+                        {% if notice.target_grade == 0 %}
+                        NULL
+                        {% elif notice.target_grade == 1 %}
+                        1학년
+                        {% elif notice.target_grade == 2 %}
+                        2학년
+                        {% elif notice.target_grade == 3 %}
+                        3학년
+                        {% else %}
+                        전학년
+                        {% endif %}
+                    </td>
+                    <td style="vertical-align:middle;">
+                        {% if notice.notice_image %}
+                            <img src="{{ notice.notice_image.url }}" alt="{{ notice.notice_title }}" style="width:100px;">
+                        <p>  </p>
+                            <a href="{{ notice.notice_image.url }}" target="_blank" class="btn btn-secondary btn-sm" style="margin-left:8%;">Show Detail</a>
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td style="vertical-align:middle;">
+                        {% if notice.notice_file %}
+                            <a href="{{ notice.notice_file.url }}" alt="{{ notice.notice_title }}" class="btn btn-primary btn-sm">Download</a>
+                            {{ notice.notice_file.size|intdiv:1048576 }}MB
+                        {% else %}
+                            No File
+                        {% endif %}
+                    </td>
+                    <td style="vertical-align:middle;">
+                        {{ notice.notice_due_date|date:'Y-m-d H시 i분' }}
+                    </td>
+                    <td style="vertical-align:middle;">
+                        {% with list_id=notice.pk|stringformat:"s" %}
+                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{ 'DeleteModel'|add:list_id }}">Delete</button>
+
+                            <div id="{{ 'DeleteModel'|add:list_id }}" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header"># Warning #</div>
+                                        <div class="modal-body">Are you sure to delete this notice?</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                                            <form method="post" action="{% url 'delete_alert_notice' notice.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

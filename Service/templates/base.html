@@ -7,29 +7,32 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
   <title>{% block title %}CNBoard{% endblock %}</title>
 </head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color:#decdc3">
+<body style="background-color:#E7E9FD">
+  <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color:#4A5AFF">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">CNBoard</a>
+      <a class="navbar-brand" href="{% url 'home' %}" style="color:white">CNBoard</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}">Home</a>
+            <a class="nav-link" href="{% url 'home' %}" style="color:white">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'file_list' %}">File List</a>
+            <a class="nav-link" href="{% url 'file_list' %}" style="color:white">File List</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'notice_list' %}">Notice List</a>
+            <a class="nav-link" href="{% url 'notice_list' %}" style="color:white">Notice List</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'exam_data_list' %}">Exam List</a>
+            <a class="nav-link" href="{% url 'alert_notice_list' %}" style="color:white">Alert Notice List</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            <a class="nav-link" href="{% url 'exam_data_list' %}" style="color:white">Exam List</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}" style="color:white">Logout</a>
           </li>
         </ul>
       </div>

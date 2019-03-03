@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import NoticeData, FileData, ExamData
+from .models import NoticeData, FileData, ExamData, AlertNoticeData
 
 
 class NoticeForm(forms.ModelForm):
@@ -24,3 +24,9 @@ class ExamForm(forms.ModelForm):
     class Meta:
         model = ExamData
         fields = ('category', 'exam_code', 'target_grade', 'exam_name', 'exam_range')
+
+
+class AlertNoticeForm(forms.ModelForm):
+    class Meta:
+        model = AlertNoticeData
+        fields = ('notice_title', 'notice_content', 'target_grade', 'notice_due_date', 'notice_image', 'notice_file')

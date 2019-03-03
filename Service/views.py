@@ -10,8 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 import json
 
-from .forms import NoticeForm, FileForm, LoginForm, ExamForm
-from .models import NoticeData, FileData, ExamData, AlertNoticeData
+from .forms import NoticeForm, FileForm, LoginForm, ExamForm, AlertNoticeForm
+from .models import NoticeData, FileData, ExamData, AlertNoticeData, CNBoardApply
 
 # Create your views here.
 
@@ -238,14 +238,52 @@ def show_alert_notice(request): # 긴급공지 리스트
     return HttpResponse(response)
 
 
-def delete_alert_notice(request): # 누구나 시간대 확인해서 다르면 삭제 가능
+def delete_alert_notice(request, pk):
+    if request.session['login_session'] != '$%@#@asf22qwr12t':
+        return redirect('admin_login')  # 로그인 안되어 있을경우
+
+    if request.method == 'POST':
+        data = AlertNoticeData.objects.get(pk=pk)
+        data.delete()
+
+        return redirect('alert_notice_list')
+
+
+def delete_alert_notice_android(request): # 누구나 시간대 확인해서 다르면 삭제 가능
     if request.method == 'POST':
         notice_id = request.POST.get('noticeID')
 
         notice = AlertNoticeData.objects.get(id=notice_id)
-        notice.remove()
+        notice.delete()
 
     return HttpResponse('')
+
+
+def upload_alert_notice(request):
+    if request.session['login_session'] != '$%@#@asf22qwr12t':
+        return redirect('admin_login')  # 로그인 안되어 있을경우
+
+    if request.method == 'POST':
+        form = AlertNoticeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('alert_notice_list')
+    else:
+        form = AlertNoticeForm()
+    return render(request, 'upload_alert_notice.html', {
+        'form': form
+    })
+
+
+def alert_notice_list(request):
+    if request.session['login_session'] != '$%@#@asf22qwr12t':
+        return redirect('admin_login')  # 로그인 안되어 있을경우
+
+    notices = AlertNoticeData.objects.all()
+    return render(request, 'alert_notice_list.html', {
+        'notices': notices
+    })
+
 
 # ---------------- NOTICE END ----------------
 
@@ -289,6 +327,20 @@ def file_list(request):
 
 
 # ------------------- FILE END --------------------
+
+# ------------------- APPLY -----------------------
+
+@csrf_exempt
+def apply_cnboard(request):
+    if request.method == 'POST':
+        student_number = request.POST.get('student_number')
+        apply_target = request.POST.get('apply_target')
+        apply_content = request.POST.get('apply_content')
+
+        CNBoardApply.objects.create(student_number=student_number, apply_target=apply_target, apply_content=apply_content)
+
+        return HttpResponse('')
+
 
 # ----------------- AUTHENTICATION -----------------
 

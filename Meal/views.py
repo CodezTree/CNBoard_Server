@@ -63,6 +63,14 @@ def show_meal_comment(request, id):
     target_meal = Meal.objects.get(id=id)
 
     comment_list = list(MealComment.objects.filter(post=target_meal).order_by('created').values()) # 생성일자 오름차순(날짜 오래된 것 처음) 정렬
+
+    print(comment_list)
+    for i, dic in enumerate(comment_list): # 세부 전달 정보 추가
+        st = CNUser.objects.get(id=dic['author_id'])
+        dic['student_num'] = st.student_num
+        dic['student_name'] = st.student_name
+
+    print(comment_list)
     response = json.dumps(comment_list, cls=DjangoJSONEncoder, ensure_ascii=False)
 
     return HttpResponse(response)
@@ -87,4 +95,4 @@ def like_comment(request):
             message = 'LikedSuccess'
 
         content = {'likes_count' : like_Comment.total_likes(), 'message' : message}
-        return HttpResponse(json.dumps(content), content_type='application/json') #
+        return HttpResponse(json.dumps(content), content_type='application/json')

@@ -78,9 +78,9 @@ class NoticeData(models.Model):
     def __str__(self):
         return self.notice_title
 
-    def delete(self, *args, **kwargs):
-        self.notice_image.delete()
-        super().delete(*args, **kwargs) # Call Real Save
+    # def delete(self, *args, **kwargs):
+    #     self.notice_image.delete()
+    #     super().delete(*args, **kwargs) # Call Real Save
 
 
 class AlertNoticeData(models.Model):
@@ -90,6 +90,9 @@ class AlertNoticeData(models.Model):
     notice_content = models.CharField(blank=True, max_length=200)
     # 공지 내용
 
+    target_grade = models.IntegerField(null=False, default=0)
+    # 대상 학년
+
     notice_image = models.ImageField(upload_to='alertNotice/image/', blank=True, null=True)
     # 공지 이미지
 
@@ -98,3 +101,20 @@ class AlertNoticeData(models.Model):
 
     notice_due_date = models.DateTimeField(null=False)
     # 공지 게시 기한
+
+    def __str__(self):
+        return self.notice_title
+
+
+class CNBoardApply(models.Model):
+    student_number = models.CharField(null=False, max_length=7)
+    # 학생 학번
+
+    apply_target = models.IntegerField(null=False, default=0)
+    # 지원 분야
+
+    apply_content = models.TextField(null=False, max_length=2000)
+    # 지원 포부 및 동기 내역
+
+    def __str__(self):
+        return self.student_number

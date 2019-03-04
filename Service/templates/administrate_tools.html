@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% block content_header %}
+        <h2>Administrate Tools</h2>
+
+        <p>
+            <a href="{% url 'refresh_meal' %}" class="btn btn-primary">Refresh Food Data</a>
+        </p>
+    {% endblock %}
+{% endblock %}

@@ -372,6 +372,16 @@ def logout(request):
 # ----------------- AUTHENTICATION -----------------
 
 
+# --------------- ADMINISTRATE TOOLS ---------------
+
+
+def administrate_tools(request):
+    if request.session['login_session'] != '$%@#@asf22qwr12t':
+        return redirect('admin_login')  # 로그인 안되어 있을경우
+
+    return render(request, 'administrate_tools.html')
+
+
 def upload(request):
     context = {}
     if request.session['login_session'] != '$%@#@asf22qwr12t':

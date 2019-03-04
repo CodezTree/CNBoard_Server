@@ -15,7 +15,7 @@ class Meal(models.Model):
     meal_date = models.DateField()
     # 급식 일자
 
-    meal_txt = models.TextField(null=False)
+    meal_txt = models.TextField(null=False, primary_key=True)
     # 급식 세부 사항
 
     meal_time_part = models.IntegerField(default=0)

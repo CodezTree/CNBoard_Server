@@ -8,4 +8,5 @@ urlpatterns = [
     path('showMeal/comment/<int:id>', views.show_meal_comment, name='show_meal_comment'),
     path('likeComment/', views.like_comment, name='like_comment'),
     path('addComment/', views.add_comment, name='add_comment'),
+    path('refresh/', views.parse_food_server, name='refresh_meal'),
 ]

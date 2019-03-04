@@ -17,6 +17,8 @@ urlpatterns = [
     path('uploadAlertNotice/', views.upload_alert_notice, name='upload_alert_notice'),
     path('applyCnboard/', views.apply_cnboard, name='apply_cnboard'),
 
+    path('administrateTools/', views.administrate_tools, name='administrate_tools'),
+
     path('files/', views.file_list, name='file_list'),
     path('files/upload', views.upload_file, name='upload_file'),
     path('files/delete/<int:pk>/', views.delete_file, name='delete_file'),

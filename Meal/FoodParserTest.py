@@ -90,8 +90,8 @@ def parse_food_list():
                 startDay = startFix
             else:
                 startDay += dt.timedelta(days=1)
-
-            return_list.append({'meal_date': startDay.strftime('%Y / %m / %d ') + dayList[i % 7], 'meal_txt': food, 'meal_time_part': i // 7}) # i 를 3 나머지로 나누면 그날 요일 나옴 i - 0 1 2 -> 월요일 = 0
+            #  + dayList[i % 7]
+            return_list.append({'meal_date': startDay.strftime('%Y-%m-%d'), 'meal_txt': food, 'meal_time_part': i // 7}) # i 를 3 나머지로 나누면 그날 요일 나옴 i - 0 1 2 -> 월요일 = 0
 
 
         return return_list

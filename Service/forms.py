@@ -30,3 +30,7 @@ class AlertNoticeForm(forms.ModelForm):
     class Meta:
         model = AlertNoticeData
         fields = ('notice_title', 'notice_content', 'target_grade', 'notice_due_date', 'notice_image', 'notice_file')
+
+
+class PasswordCheckForm(forms.Form):
+    Pass = forms.CharField(max_length=20, widget=forms.PasswordInput())

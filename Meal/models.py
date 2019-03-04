@@ -12,10 +12,10 @@ class Meal(models.Model):
     # meal_id = models.AutoField(primary_key=True)
     # 급식 ID - 코멘트 연결할 때 쓰임 -> Django 기본 제공으로 변경
 
-    meal_date = models.DateField()
+    meal_date = models.DateField(null=False)
     # 급식 일자
 
-    meal_txt = models.TextField(null=False, primary_key=True)
+    meal_txt = models.TextField(null=False)
     # 급식 세부 사항
 
     meal_time_part = models.IntegerField(default=0)
@@ -35,7 +35,7 @@ class MealComment(models.Model):
     author = models.ForeignKey(CNUser, related_name='related_author_meal_comment', on_delete=models.CASCADE)
     # 작성자
 
-    created = models.DateTimeField()
+    created = models.DateTimeField(auto_created=True, auto_now=True)
     # 작성 일시
 
     likes = models.ManyToManyField(CNUser, related_name='related_likes_meal_comment', blank=True)

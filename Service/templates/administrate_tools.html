@@ -6,7 +6,12 @@
         <h2>Administrate Tools</h2>
 
         <p>
-            <a href="{% url 'refresh_meal' %}" class="btn btn-primary">Refresh Food Data</a>
+            {% if meal_setting == 0 %}
+                <a href="{% url 'refresh_meal' %}" class="btn btn-primary">Refresh Food Data</a>
+            {% else %}
+                <a href="{% url 'administrate_tools' %}" class="btn btn-danger">Already Refreshed Food</a>
+            {% endif %}
+            <a href="{% url 'confirm_meal_update_change' %}" class="btn btn-primary btn-sm">Reset Refresh Setting</a>
         </p>
     {% endblock %}
 {% endblock %}

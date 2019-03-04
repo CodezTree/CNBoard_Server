@@ -93,6 +93,8 @@ def parse_food_list():
             #  + dayList[i % 7]
             return_list.append({'meal_date': startDay.strftime('%Y-%m-%d'), 'meal_txt': food, 'meal_time_part': i // 7}) # i 를 3 나머지로 나누면 그날 요일 나옴 i - 0 1 2 -> 월요일 = 0
 
+        print(return_list)
+
 
         return return_list
         # 급식 정보 입력 예시
@@ -103,8 +105,6 @@ def parse_food_list():
         # 음식메뉴 3%%
 
         # 급식 파싱 완료 ---------------!
-
-print(parse_food_list())
 
 # if __name__ == '__main__':
 #     user_id = 'codeztree'

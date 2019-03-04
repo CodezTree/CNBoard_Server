@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 import json
 
-from .forms import NoticeForm, FileForm, LoginForm, ExamForm, AlertNoticeForm
+from .forms import NoticeForm, FileForm, LoginForm, ExamForm, AlertNoticeForm, PasswordCheckForm
 from .models import NoticeData, FileData, ExamData, AlertNoticeData, CNBoardApply
 
 # Create your views here.
@@ -355,7 +355,7 @@ def admin_login(request):
                 return redirect('home')
             else :
                 return HttpResponseForbidden()  # 접근 제한
-    else :
+    else:
         form = LoginForm()
         request.session['login_session'] = ''
     return render(request, 'login.html', {
@@ -379,7 +379,69 @@ def administrate_tools(request):
     if request.session['login_session'] != '$%@#@asf22qwr12t':
         return redirect('admin_login')  # 로그인 안되어 있을경우
 
-    return render(request, 'administrate_tools.html')
+    f = open(os.path.join(settings.BASE_DIR, 'Service/ServiceSetting.txt'), 'r+')
+    avail = '0'
+    ret = 0
+
+    while True:
+        line = f.readline()
+        if not line:
+            break
+
+        sets = line[:-1].split("=")
+
+        if sets[0] == 'Meal_Updated':
+            avail = sets[1]
+            print(avail)
+            if avail == '0':
+                ret = 0
+            else:
+                ret = 1
+            break
+    f.close()
+
+    return render(request, 'administrate_tools.html', {
+        'meal_setting': ret
+    })
+
+
+def confirm_meal_update_change(request):
+    if request.session['login_session'] != '$%@#@asf22qwr12t':
+        return redirect('admin_login')  # 로그인 안되어 있을경우
+
+    if request.method == 'POST':
+        form = PasswordCheckForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            if data.get('Pass') == 'cnboard1234!':
+                f = open(os.path.join(settings.BASE_DIR, 'Service/ServiceSetting.txt'), 'r+')
+                avail = '0'
+
+                while True:
+                    line = f.readline()
+                    if not line:
+                        break
+
+                    sets = line[:-1].split("=")
+                    print(sets)
+                    if sets[0] == 'Meal_Updated':
+                        avail = sets[1]
+                        if avail == '1':
+                            f.seek(f.tell() - 3, os.SEEK_SET)
+                            f.write('0')
+                        break
+                f.close()
+
+                return redirect('administrate_tools')
+    else:
+        form = PasswordCheckForm()
+
+    return render(request, 'login.html', {
+        'form': form
+    })
+
+
+# --------------------------------------------------
 
 
 def upload(request):

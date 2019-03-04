@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
+from django.conf import settings
+import os
 import datetime as dt
 import json
 
@@ -107,5 +109,20 @@ def parse_food_server(request):
 
     for food in data:
         Meal.objects.create(meal_date=food['meal_date'], meal_txt=food['meal_txt'], meal_time_part=food['meal_time_part'])
+
+    f = open(os.path.join(settings.BASE_DIR, 'Service/ServiceSetting.txt'), 'r+')
+
+    while True:
+        line = f.readline()
+        if not line:
+            break
+
+        sets = line[:-1].split("=")
+        print(sets)
+        if sets[0] == 'Meal_Updated':
+            f.seek(f.tell() - 3, os.SEEK_SET)
+            f.write('1')
+            break
+    f.close()
 
     return redirect('administrate_tools')

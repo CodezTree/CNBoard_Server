@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
@@ -9,6 +9,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 import re
+from .FoodParserTest import parse_food_list
 from .models import Meal, MealComment
 from Service.models import CNUser
 # for parser
@@ -96,3 +97,12 @@ def like_comment(request):
 
         content = {'likes_count' : like_Comment.total_likes(), 'message' : message}
         return HttpResponse(json.dumps(content), content_type='application/json')
+
+
+def parse_food_server(request):
+    data = parse_food_list()
+
+    for food in data:
+        Meal.objects.create(meal_date=food['meal_date'], meal_txt=food['meal_txt'], meal_time_part=food['meal_time_part'])
+
+    return redirect('home')

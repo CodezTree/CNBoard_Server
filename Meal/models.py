@@ -35,7 +35,7 @@ class MealComment(models.Model):
     author = models.ForeignKey(CNUser, related_name='related_author_meal_comment', on_delete=models.CASCADE)
     # 작성자
 
-    created = models.DateTimeField(auto_created=True, auto_now=True)
+    created = models.DateTimeField(auto_created=True, auto_now=False)
     # 작성 일시
 
     likes = models.ManyToManyField(CNUser, related_name='related_likes_meal_comment', blank=True)
@@ -43,10 +43,6 @@ class MealComment(models.Model):
 
     def __str__(self):
         return self.comment
-
-    def save(self, *args, **kwargs):
-        self.created = timezone.now() # update timezone every save function
-        return super(MealComment, self).save(*args, **kwargs)
 
     def total_likes(self):
         return int(self.likes.count())

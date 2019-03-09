@@ -111,6 +111,7 @@ def parse_food_server(request):
         return redirect('admin_login')  # 로그인 안되어 있을경우
 
     data = parse_food_list()
+    print(data)
 
     for food in data:
         Meal.objects.create(meal_date=food['meal_date'], meal_txt=food['meal_txt'], meal_time_part=food['meal_time_part'])

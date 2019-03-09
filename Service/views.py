@@ -6,6 +6,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ObjectDoesNotExist
 
 import os
 import json
@@ -93,12 +94,22 @@ def exam_service_state_change(request):
     return redirect('exam_data_list')
 
 
+@csrf_exempt
 def add_exam_data_android(request):
     if request.method == 'POST':
         exam_data = json.load(request.POST.get('examData')) # examData 는 dictionary
 
         #for i, _exam in enumerate(exam_data):
-        ExamData.objects.create(category=exam_data.get('category'), exam_code=int(exam_data.get('exam_code')), target_grade=int(exam_data.get('target_grade')), exam_range=exam_data.get('exam_range'), exam_name=exam_data.get('exam_name'))
+        # try:
+        #     tempExam = ExamData.objects.get(exam_code=int(exam_data.get('exam_code')), exam_name=exam_data.get('exam_name'))
+        #     if tempExam:
+        #         tempExam.exam
+        #
+        # except ObjectDoesNotExist:
+        #
+        ExamData.objects.create(category=exam_data.get('category'), exam_code=int(exam_data.get('exam_code')),
+                                    target_grade=int(exam_data.get('target_grade')),
+                                    exam_range=exam_data.get('exam_range'), exam_name=exam_data.get('exam_name'))
         # Create Exam Data Files
 
         return HttpResponse('DataAddSuccess')
@@ -156,7 +167,7 @@ def delete_exam_data(request, pk):
 def show_notice_android(request):
     # notices = NoticeData.objects.all()
     # serialized_query = serializers.serialize('json', notices)
-    notices = list(NoticeData.objects.all().values())
+    notices = list(NoticeData.objects.all().order_by('notice_date').values())
     # response = serializers.serialize('json', notices)
     response = json.dumps(notices, cls=DjangoJSONEncoder, ensure_ascii=False)
 
@@ -199,6 +210,7 @@ def delete_notice(request, pk):
     return redirect('notice_list')
 
 
+@csrf_exempt
 def show_filtered_notice(request):
     if request.method == 'POST':
         notice_kind = request.POST.get('notice_kind')
@@ -249,6 +261,7 @@ def delete_alert_notice(request, pk):
         return redirect('alert_notice_list')
 
 
+@csrf_exempt
 def delete_alert_notice_android(request): # 누구나 시간대 확인해서 다르면 삭제 가능
     if request.method == 'POST':
         notice_id = request.POST.get('noticeID')

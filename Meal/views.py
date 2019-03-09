@@ -21,6 +21,7 @@ def index(request):
     url = "http://stu.cne.go.kr/sts_sci_md01_001.do?schulCode=N100002870&schulCrseScCode=4&schulKndScCode=04&schMmealScCode="
     return HttpResponse("Hello")
 
+
 @csrf_exempt
 def add_comment(request):
     if request.method == 'POST':
@@ -36,6 +37,7 @@ def add_comment(request):
         return HttpResponse('CommentSuccess')
 
 
+@csrf_exempt
 def delete_comment(request):
     if request.method == 'POST':
         comment_id = request.POST.get('commentID')

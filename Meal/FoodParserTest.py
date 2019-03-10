@@ -12,27 +12,63 @@ def get_user_session(id):
 
 
 def get_web_session_id(session):
-    res = session.get('http://student.cnsa.hs.kr/login/userLogin')
+    # header = {
+    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
+    #     'Upgrade-Insecure-Requests': '1',
+    #     'Connection': 'keep-alive',
+    #     'Referer': 'https://student.cnsa.hs.kr/home',
+    #     'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+    #     'Accept-Encoding': 'gzip, deflate, br'}
+    res = session.post('http://student.cnsa.hs.kr/login/userLogin')
     print('WEB Session get : ' + res.cookies.get_dict().get('JSESSIONID'))
+    print(res.text)
+    return str(res.cookies.get_dict().get('JSESSIONID'))
+
+
+def set_session(session):
+    res = session.get('http://student.cnsa.hs.kr/login/userLogin')
     return str(res.cookies.get_dict().get('JSESSIONID'))
 
 
 def attempt_login(sess, id, password, session_id):
-    params = {'loginId' : id, 'loginPw': password}
-    cookies = {'JSESSIONID' : session_id }
-    url = 'http://student.cnsa.hs.kr/login/userLogin'
-    res = sess.post(url, data=params, cookies=cookies)
+    header = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
+              'Upgrade-Insecure-Requests': '1',
+              'Origin': 'https://student.cnsa.hs.kr',
+              'Connection': 'keep-alive',
+              'Host':'student.cnsa.hs.kr',
+              'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+              'Referer': 'https://student.cnsa.hs.kr/login/userLogin',
+              'Accept-Language':'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+              'Accept-Encoding':'gzip, deflate, br'}
+    params = {'loginId' : id, 'loginPw': password, "pwMenuId":"", "pwMenuUrl":"", "trmnlIdntNo":"", "gcmRegId":"", "osKnd":"", "osVer":"", "dpi":"", "rsotnHrzn":"", "rsotnVrtc":"", "modelNo":"", "ipInfo":"" }
+    # cookies = {'JSESSIONID': session_id }
+    url = 'https://student.cnsa.hs.kr/login/userLogin'
+    res = sess.post(url, data=params, headers=header)
     # print(res.text, res.status_code)
-    return res.status_code
+    # print(res.text)
+    return res.status_code, str(res.cookies.get_dict().get('JSESSIONID'))
+
+# def attempt_login(sess, id, password, session_id):
+#     params = {'loginId' : id, 'loginPw': password}
+#     # cookies = {'JSESSIONID': session_id }
+#     url = 'http://student.cnsa.hs.kr/login/userLogin'
+#     # cookie = {'JSESSIONID': session_id}
+#     res = sess.post(url, data=params)
+#     # print(res.text, res.status_code)
+#     print(res.text)
+#     return res.status_code, str(res.cookies.get_dict().get('JSESSIONID'))
 
 def connect_to_main_web(sess, session_id):
-    cookies = {'JSESSIONID' : session_id }
+    # cookies = {'JSESSIONID' : session_id }
     url = 'http://student.cnsa.hs.kr/home'
-    res = sess.post(url, cookies=cookies)
-    # print(res.text)
+    res = sess.post(url)
+    #print(res.text[:400])
+
 
 def connect_to_food_table(sess, session_id):
-    cookies = {'JSESSIONID' : session_id }
+    cookies = {}
+    if not sess.cookies.get_dict().get('JSESSIONID'):
+        cookies = {'JSESSIONID': session_id }
     url = 'http://student.cnsa.hs.kr/livelihood/meal/listMeal'
     res = sess.post(url, cookies=cookies)
     # print(res.text)
@@ -48,17 +84,28 @@ def parse_food_list():
     user_pass = 'green37984528'
     with requests.Session() as sess:
         session_id = get_user_session(user_id)
-        if session_id == '':
-            session_id = get_web_session_id(sess)  # Session ID 없으면 페이지에서 받아오고 로그인 시도
+        print("Session ID from CHECK : " + session_id)
 
-        if attempt_login(sess, user_id, user_pass, session_id) != 200:
-            print('로그인에 실패하였습니다. 관리자를 불러주세요.')
-            exit()
+        if session_id == '':
+            print("Login Attempt")
+
+            session_id = set_session(sess) # 페이지 세션을 받는다
+            # exit()
+            print("PAGE SESSION : " + session_id)
+            request_code, _session_id = attempt_login(sess, user_id, user_pass, session_id)
+            print(request_code)
+            if request_code != 200:
+                print('로그인에 실패하였습니다. 관리자를 불러주세요.')
+                exit()
+
+            session_id = get_user_session(user_id)
+            print("Login Successful! Session : " + str(session_id))
+
+            # connect_to_main_web(sess, session_id)
 
         print('\n\n##################################\n\n')
 
         # 급식 파싱 시작 ---------------
-
         soup = BeautifulSoup(connect_to_food_table(sess, session_id), 'html.parser')
 
         # foodList = soup.find_all('td', {'class' : 'day bgToday'})
@@ -105,6 +152,8 @@ def parse_food_list():
         # 음식메뉴 3%%
 
         # 급식 파싱 완료 ---------------!
+
+parse_food_list()
 
 # if __name__ == '__main__':
 #     user_id = 'codeztree'

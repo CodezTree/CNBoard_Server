@@ -1,4 +1,5 @@
 rootParam=12
-Exam_Service_Available=1
+Exam_Service_Available=0
 Meal_Updated=1
+App_Lastest_Version=0001
 NULL=1

@@ -19,6 +19,8 @@ urlpatterns = [
 
     path('administrateTools/', views.administrate_tools, name='administrate_tools'),
     path('administrateTools/confirmMealUpdateChange', views.confirm_meal_update_change, name='confirm_meal_update_change'),
+    path('administrateTools/updateAppVersion', views.update_app_version, name='update_app_version'),
+    path('showAppVersion/', views.show_app_version, name='show_app_version'),
 
     path('files/', views.file_list, name='file_list'),
     path('files/upload', views.upload_file, name='upload_file'),

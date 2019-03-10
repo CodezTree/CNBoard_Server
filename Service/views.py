@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import os
 import json
 
-from .forms import NoticeForm, FileForm, LoginForm, ExamForm, AlertNoticeForm, PasswordCheckForm
+from .forms import NoticeForm, FileForm, LoginForm, ExamForm, AlertNoticeForm, PasswordCheckForm, VersionUpdateForm
 from .models import NoticeData, FileData, ExamData, AlertNoticeData, CNBoardApply
 
 # Create your views here.
@@ -393,8 +393,8 @@ def administrate_tools(request):
         return redirect('admin_login')  # 로그인 안되어 있을경우
 
     f = open(os.path.join(settings.BASE_DIR, 'Service/ServiceSetting.txt'), 'r+')
-    avail = '0'
     ret = 0
+    app_version = ''
 
     while True:
         line = f.readline()
@@ -410,11 +410,14 @@ def administrate_tools(request):
                 ret = 0
             else:
                 ret = 1
-            break
+
+        if sets[0] == 'App_Lastest_Version':
+            app_version = sets[1]
     f.close()
 
     return render(request, 'administrate_tools.html', {
-        'meal_setting': ret
+        'meal_setting': ret,
+        'app_version': app_version
     })
 
 
@@ -453,6 +456,53 @@ def confirm_meal_update_change(request):
         'form': form
     })
 
+
+def update_app_version(request):
+    if request.session['login_session'] != '$%@#@asf22qwr12t':
+        return redirect('admin_login')  # 로그인 안되어 있을경우
+
+    if request.method == 'POST':
+        form = VersionUpdateForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            if data.get('Pass') == 'cnboard1234!':
+                f = open(os.path.join(settings.BASE_DIR, 'Service/ServiceSetting.txt'), 'r+')
+
+                while True:
+                    line = f.readline()
+                    if not line:
+                        break
+
+                    sets = line[:-1].split("=")
+                    print(sets)
+                    if sets[0] == 'App_Lastest_Version':
+                        f.seek(f.tell() - 6, os.SEEK_SET) # 4 칸 뒤로 가서 버전코드는 0000 0001 4글자
+                        f.write(data.get('Version'))
+                        break
+                f.close()
+
+                return redirect('administrate_tools')
+    else:
+        form = VersionUpdateForm()
+
+    return render(request, 'login.html', {
+        'form': form
+    })
+
+
+def show_app_version(request):
+    f = open(os.path.join(settings.BASE_DIR, 'Service/ServiceSetting.txt'), 'r+')
+
+    while True:
+        line = f.readline()
+        if not line:
+            break
+
+        sets = line[:-1].split("=")
+        print(sets)
+        if sets[0] == 'App_Lastest_Version':
+            f.close()
+            return HttpResponse(set[1])
 
 # --------------------------------------------------
 

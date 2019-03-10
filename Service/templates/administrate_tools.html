@@ -13,5 +13,11 @@
             {% endif %}
             <a href="{% url 'confirm_meal_update_change' %}" class="btn btn-primary btn-sm">Reset Refresh Setting</a>
         </p>
+
+        <p>
+            <a href="{% url 'update_app_version' %}" class="btn btn-primary">Change App Version</a>
+
+            Current Version : {{ app_version }}
+        </p>
     {% endblock %}
 {% endblock %}

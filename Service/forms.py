@@ -34,3 +34,8 @@ class AlertNoticeForm(forms.ModelForm):
 
 class PasswordCheckForm(forms.Form):
     Pass = forms.CharField(max_length=20, widget=forms.PasswordInput())
+
+
+class VersionUpdateForm(forms.Form):
+    Version = forms.CharField(max_length=5)
+    Pass = forms.CharField(max_length=20, widget=forms.PasswordInput())

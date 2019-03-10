@@ -502,7 +502,7 @@ def show_app_version(request):
         print(sets)
         if sets[0] == 'App_Lastest_Version':
             f.close()
-            return HttpResponse(set[1])
+            return HttpResponse(sets[1])
 
 # --------------------------------------------------
 

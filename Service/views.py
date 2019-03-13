@@ -21,11 +21,13 @@ class Home(TemplateView):
     template_name = 'home.html'
 
     def get(self, request, *args, **kwargs):
-        if request.session['login_session'] != '$%@#@asf22qwr12t':
-            return redirect('admin_login') # 로그인 안되어 있을경우
-
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context)
+        try:
+            if request.session['login_session'] != '$%@#@asf22qwr12t':
+                return redirect('admin_login') # 로그인 안되어 있을경우
+        except KeyError:
+            request.session['login_session'] = ''
+            context = self.get_context_data(**kwargs)
+            return self.render_to_response(context)
 
 
 # --------------------- EXAM -----------------------
@@ -358,6 +360,7 @@ def apply_cnboard(request):
 # ----------------- AUTHENTICATION -----------------
 
 def admin_login(request):
+    request.session['login_session'] = ''
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():

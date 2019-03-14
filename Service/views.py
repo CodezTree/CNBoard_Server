@@ -26,8 +26,8 @@ class Home(TemplateView):
                 return redirect('admin_login') # 로그인 안되어 있을경우
         except KeyError:
             request.session['login_session'] = ''
-            context = self.get_context_data(**kwargs)
-            return self.render_to_response(context)
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
 
 
 # --------------------- EXAM -----------------------
